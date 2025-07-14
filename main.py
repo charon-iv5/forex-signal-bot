@@ -2,6 +2,7 @@
 # Sends 15-minute signals to Telegram with TP/SL, time, and chart image
 
 import requests
+import pytz
 import time
 import datetime
 import matplotlib.pyplot as plt
@@ -26,8 +27,10 @@ def get_price(pair):
 
 # === Telegram messaging ===
 def send_telegram_text(message):
-    timestamp = datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")
-    full_message = f"🕰 {timestamp}\n" + message
+    tehran_tz = pytz.timezone("Asia/Tehran")
+    now_tehran = datetime.datetime.now(tehran_tz)
+    timestamp = now_tehran.strftime("%Y/%m/%d - %H:%M")
+    full_message = f"🕰 {timestamp}\\n" + message
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     requests.post(url, data={"chat_id": CHAT_ID, "text": full_message})
 
