@@ -34,23 +34,6 @@ def send_telegram_text(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     requests.post(url, data={"chat_id": CHAT_ID, "text": full_message})
 
-def send_telegram_chart(pair, prices):
-    times = [f"-{i*15}m" for i in range(len(prices))][::-1]
-    plt.figure(figsize=(6, 3))
-    plt.plot(times, prices, marker='o', linestyle='-', color='gold' if pair == "XAUUSD" else 'blue')
-    plt.title(f"{pair} - 15min Chart")
-    plt.xlabel("Time")
-    plt.ylabel("Price")
-    plt.grid(True)
-    plt.tight_layout()
-    filename = f"{pair}_chart.png"
-    plt.savefig(filename)
-    plt.close()
-
-    with open(filename, "rb") as f:
-        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
-        requests.post(url, files={"photo": f}, data={"chat_id": CHAT_ID})
-
 # === Signal generation ===
 def generate_signal(pair):
     price = get_price(pair)
